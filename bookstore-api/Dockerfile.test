@@ -1,0 +1,19 @@
+# Test Dockerfile - keeps Go toolchain for testing
+FROM golang:1.22-alpine
+
+WORKDIR /app
+
+# Install git (needed for some Go modules)
+RUN apk add --no-cache git
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Default command for testing
+CMD ["go", "test", "-v", "./..."]
